@@ -35,3 +35,43 @@ footer {
   color: var(--color-main);
 }
 
+.crawl-container {
+  position: relative;
+  height: 800px;
+  overflow: hidden;
+
+  color: yellow;
+  perspective: 500px;
+}
+
+.far-galaxy {
+  position: absolute;
+  bottom: -100%;
+  width: 100%;
+  text-align: justify;
+  transform: rotateX(25deg);
+  transform-origin: 60% 100%;
+  animation: crawl 20s linear infinite;
+
+}
+
+@keyframes crawl {
+  from {
+    bottom: -100%;
+  }
+  to {
+    bottom: 120%;
+  }
+}
+.blink-photo {
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 10px #fff;
+  }
+  50% {
+    box-shadow: 0 0 30px #ff0000;
+  }
+}
