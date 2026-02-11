@@ -11,7 +11,7 @@ function App() {
         <div className="container-fluid">
             <Header/>
             <Main/>
-            <Footer/>
+            <Footer btnTitle="Send me e-mail"/>
         </div>
 
     )
