@@ -43,6 +43,9 @@ footer {
   color: yellow;
   perspective: 500px;
 }
+.character-value {
+  color: #45a52a;
+}
 
 .far-galaxy {
   position: absolute;
