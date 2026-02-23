@@ -1,36 +1,62 @@
 import {useEffect, useState} from "react";
+import {base_url} from "../utils/constants.js";
 
 const AboutMe = () => {
-    const [aboutMe, setAboutMe] = useState();
-
+    const [hero, setHero] = useState(null);
     useEffect(() => {
-        const id = 1;
-        fetch(`https://sw-info-api.herokuapp.com/v1/peoples/${id}`)
-        .then(res => res.json())
-        .then(data =>setAboutMe(data))
-            .catch(() => setAboutMe('Error loading character'))
+        const period = 30 * 24 * 60 * 60 * 1000;// days->>>milliseconds
+        const savedData = localStorage.getItem("hero");
+        if (savedData) {
+            const parsed = JSON.parse(savedData);
+            const outOfDate = Date.now() - parsed.timestamp > period;
+            if (!outOfDate) {
+                setHero(parsed.data);
+                return
+            }
+        }
 
-    }, []);
-    if (aboutMe) {
+
+
+            fetch(`${base_url}/v1/peoples/1`)
+                .then(response => response.json())
+                .then(data => {
+
+                    const info = {
+                        name: data.name,
+                        gender: data.gender,
+                        birth_year: data.birth_year,
+                        height: data.height,
+                        mass: data.mass,
+                        hair_color: data.hair_color,
+                        skin_color: data.skin_color,
+                        eye_color: data.eye_color
+                    }
+                    setHero(info);
+                    localStorage.setItem("hero", JSON.stringify({
+                        data: info,
+                        timestamp : Date.now(),
+                    }));
+                })
+        }, [])
+
+
         return (
-            <div >
-                <h2> {aboutMe.name}</h2>
-                <p>Gender: <span className="character-value"> {aboutMe.gender}</span></p>
-                <p>Height: <span className="character-value">{aboutMe.height}</span></p>
-                <p>Eyes: <span className="character-value">{aboutMe.eye_color}</span></p>
-                <p>Mass: <span className="character-value">{aboutMe.mass}</span></p>
-                <p>Home World: <span className="character-value">{aboutMe.homeworld}</span></p>
-                <p>Born: <span className="character-value">{aboutMe.birth_year}</span></p>
-            </div>
+            <>
+                {(!!hero) &&
+                    <div className='fs-2 lh-lg text-justify ms-5'>
+                        <p><span className='character-value'>name:</span> {hero.name}</p>
+                        <p><span className='character-value'>gender:</span> {hero.gender}</p>
+                        <p><span className='character-value'>birth year:</span> {hero.birth_year}</p>
+                        <p><span className='character-value'>height:</span> {hero.height}</p>
+                        <p><span className='character-value'>mass:</span> {hero.mass}</p>
+                        <p><span className='character-value'>hair color:</span> {hero.hair_color}</p>
+                        <p><span className='character-value'>skin color:</span> {hero.skin_color}</p>
+                        <p><span className='character-value'>eye color:</span> {hero.eye_color}</p>
+                    </div>
+                }
+            </>
         );
-    }else {
-        return(
-            <p >Loading...
-                <span className={'spiner-border spinner-border-sm'}></span>
-                <span className={'spiner-border spinner-grow-sm'}>Loading...</span>
-            </p>
-        )
-    }
-};
 
-export default AboutMe;
+    }
+
+    export default AboutMe;
