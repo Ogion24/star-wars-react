@@ -4,7 +4,7 @@ import FarGalaxy from "./FarGalaxy.jsx";
 
 const Home = () => {
     return (
-        <main className="clearfix">
+        <main >
             <Hero/>
             <DreamTeam/>
             <FarGalaxy/>

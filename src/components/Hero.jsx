@@ -2,8 +2,8 @@ import hero from "../assets/main.jpg";
 
 const Hero = () => {
     return (
-        <section className="float-start w-25 mt-1 me-3">
-            <img className= "blink-photo w-100" src={hero} alt="Luke Skywalker"/>
+        <section className="float-left w-1/4  mt-2 mr-4">
+            <img className= " w-full shadow-hero hover:scale-110 " src={hero} alt="Luke Skywalker"/>
         </section>
     );
 };

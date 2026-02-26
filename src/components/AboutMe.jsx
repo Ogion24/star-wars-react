@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
-import {base_url} from "../utils/constants.js";
+import {base_url, heroFields} from "../utils/constants.js";
+
 
 const AboutMe = () => {
     const [hero, setHero] = useState(null);
@@ -43,15 +44,20 @@ const AboutMe = () => {
         return (
             <>
                 {(!!hero) &&
-                    <div className='fs-2 lh-lg text-justify ms-5'>
-                        <p><span className='character-value'>name:</span> {hero.name}</p>
-                        <p><span className='character-value'>gender:</span> {hero.gender}</p>
-                        <p><span className='character-value'>birth year:</span> {hero.birth_year}</p>
-                        <p><span className='character-value'>height:</span> {hero.height}</p>
-                        <p><span className='character-value'>mass:</span> {hero.mass}</p>
-                        <p><span className='character-value'>hair color:</span> {hero.hair_color}</p>
-                        <p><span className='character-value'>skin color:</span> {hero.skin_color}</p>
-                        <p><span className='character-value'>eye color:</span> {hero.eye_color}</p>
+                    <div className='fs-2 lh-lg text-justify text-3xl ms-5'>
+                        {heroFields.map(({ label, key }) => (
+                            <p key={key}>
+                                <span className="text-violet-500">{label}:</span> {hero[key]}
+                            </p>
+                        ))}
+                        {/*<p><span className='character-value'>name:</span> {hero.name}</p>*/}
+                        {/*<p><span className='character-value'>gender:</span> {hero.gender}</p>*/}
+                        {/*<p><span className='character-value'>birth year:</span> {hero.birth_year}</p>*/}
+                        {/*<p><span className='character-value'>height:</span> {hero.height}</p>*/}
+                        {/*<p><span className='character-value'>mass:</span> {hero.mass}</p>*/}
+                        {/*<p><span className='character-value'>hair color:</span> {hero.hair_color}</p>*/}
+                        {/*<p><span className='character-value'>skin color:</span> {hero.skin_color}</p>*/}
+                        {/*<p><span className='character-value'>eye color:</span> {hero.eye_color}</p>*/}
                     </div>
                 }
             </>

@@ -1,63 +1,64 @@
 import {useEffect, useState} from "react";
-import {base_url} from "../utils/constants.js";
+import {base_url,period_month} from "../utils/constants.js";
+
 
 const Contact = () => {
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Form submitted");
-    }
-    const [planets, setPlanets] = useState([]);
+    const [planets, setPlanets] = useState(() => {
+        const planets = JSON.parse(localStorage.getItem('planets'));
+        if (planets && ((Date.now() - planets.time) < period_month)) {
+            return planets.payload;
+        } else {
+            return ['wait...']
+        }
+    });
+
+
     useEffect(() => {
-        const period = 30 * 24 * 60 * 60 * 1000;// days->>>milliseconds
-        const savedData = localStorage.getItem("planet");
-        if (savedData) {
-            const parsed = JSON.parse(savedData);
-            const outOfDate = Date.now() - parsed.timestamp > period;
-            if (!outOfDate) {
-                setPlanets(parsed.data);
-                return
-            }
+        const getPlanets = async () => {
+            const res = await fetch(`${base_url}/v1/planets`);
+            const data = await res.json();
+            const planets = data.map(item => item.name);
+            setPlanets(planets);
+            localStorage.setItem('planets', JSON.stringify({
+                payload: planets,
+                time: Date.now()
+            }));
         }
 
 
-        fetch(`${base_url}/v1/planets`)
-            .then(response => response.json())
-            .then(data => {
-                setPlanets(data);
-                localStorage.setItem("planet", JSON.stringify({
-                    data: data,
-                    timestamp: Date.now(),
-                }));
-            })
+        if (planets.length === 1){
+            getPlanets().then(() => console.log('Planets were loaded'));
+        }
     }, [])
+
+
     return (
-        <div className="container">
-            <form onSubmit={handleSubmit}>
-
-                <label htmlFor="fname">First Name</label>
-                <input type="text" id="fname" name="firstname" placeholder="Your name.."/>
-
-                <label htmlFor="lname">Last Name</label>
-                <input type="text" id="lname" name="lastname" placeholder="Your last name.."/>
-
-                <label htmlFor="country">Planet</label>
-                <select id="country" name="planet">
-                    {planets.map((planet) => (
-                        <option key={planet.name} value={planet.name}>
-                            {planet.name}
-                        </option>
-                    ))}
+        <form className="border bg-amber-50 p-6 rounded-md max-x-md mx-auto space-y-4 " onSubmit={e => {
+            e.preventDefault();
+        }}>
+            <label className=" block w-full ">First Name
+                <input className=" p-3 border rounded-md mt-1 block w-full text-black" type="text" name="firstname" placeholder="Your name.."/>
+            </label>
+            <label className=" w-full ">Last Name
+                <input className="p-3 border rounded-md mt-1 block w-full text-black" type="text" name="lastname " placeholder="Your last name.."/>
+            </label>
+            <label className=" w-full  ">Planet
+                <select className="text-black ml-5 mt-3" name="planet">
+                    {planets.map(item => <option value={item} key={item}>{item}</option>)}
                 </select>
+            </label>
 
-                <label htmlFor="subject">Subject</label>
-                <textarea id="subject" name="subject" placeholder="Write something.."
-                          style={{height: "200px"}}></textarea>
 
-                <input type="submit" value="Submit"/>
+            <label className="block w-full mt-5">Subject
+                <textarea className="p-3 border rounded-md mt-1 block w-full h-48 text-black" name="subject" placeholder="Write something.."></textarea>
+            </label>
+            <button className="bg-green-300 text-black px-3 rounded-md cursor-pointer hover:text-white hover:bg-red-500" type="submit">Submit</button>
+        </form>
+    )
+}
 
-            </form>
-        </div>
-    );
-};
+
+
+
 
 export default Contact;

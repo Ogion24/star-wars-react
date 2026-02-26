@@ -1,12 +1,12 @@
 
 
 const Friend = ({friend, pos}) => {
-    let styles = "col-sm-4 p-1";
+    let styles = "w-full hover:animate-pulse";
     if(pos === 9) {
-        styles += " rounded-bottom-right ";
+        styles += " rounded-br-3xl ";
     }
         if(pos === 7){
-            styles += " rounded-bottom-left ";
+            styles += " rounded-bl-3xl ";
     }
     return (
         <img className={styles} src={friend} alt="Friend"/>
